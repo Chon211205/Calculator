@@ -1,27 +1,41 @@
+import { useState } from 'react'
+import { useCalculator } from '../hooks/useCalculator'
+
+const buttons = [
+  '7', '8', '9', '+',
+  '4', '5', '6', '-',
+  '1', '2', '3', '*',
+  '0', '.', '=', '/',
+  '%', '+/-'
+]
+
 export function Calculator() {
+  const [display, setDisplay] = useState('0')
+  const calculator = useCalculator()
+
+  function handleClick(value: string) {
+    if (/^\d$/.test(value)) {
+      setDisplay(calculator.inputDigit(display, value))
+    } else if (value === '.') {
+      setDisplay(calculator.inputDecimal(display))
+    } else if (value === '+/-') {
+      setDisplay(calculator.toggleSign(display))
+    } else if (value === '=') {
+      setDisplay(calculator.pressEqual(display))
+    } else {
+      setDisplay(calculator.pressOperation(display, value as never))
+    }
+  }
+
   return (
     <section className="calculator">
-      <div className="display">0</div>
+      <div className="display">{display}</div>
       <div className="keypad">
-        <button>7</button>
-        <button>8</button>
-        <button>9</button>
-        <button>+</button>
-
-        <button>4</button>
-        <button>5</button>
-        <button>6</button>
-        <button>-</button>
-
-        <button>1</button>
-        <button>2</button>
-        <button>3</button>
-        <button>*</button>
-
-        <button>0</button>
-        <button>.</button>
-        <button>=</button>
-        <button>/</button>
+        {buttons.map((button) => (
+          <button key={button} onClick={() => handleClick(button)}>
+            {button}
+          </button>
+        ))}
       </div>
     </section>
   )
