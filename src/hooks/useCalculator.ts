@@ -125,11 +125,32 @@ export function useCalculator() {
     return formatted
   }
 
+    function press(value: string, button: string) {
+    if (/^\d$/.test(button)) {
+        return inputDigit(value, button)
+    }
+
+    if (button === '.') {
+        return inputDecimal(value)
+    }
+
+    if (button === '+/-') {
+        return toggleSign(value)
+    }
+
+    if (button === '=') {
+        return pressEqual(value)
+    }
+
+    return pressOperation(value, button as Operation)
+    }
+
   return {
     inputDigit,
     inputDecimal,
     toggleSign,
     pressOperation,
-    pressEqual
+    pressEqual,
+    press
   }
 }

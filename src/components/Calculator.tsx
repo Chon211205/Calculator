@@ -1,4 +1,6 @@
 import { useState } from 'react'
+import { Display } from './Display'
+import { Keypad } from './Keypad'
 import { useCalculator } from '../hooks/useCalculator'
 
 const buttons = [
@@ -13,30 +15,14 @@ export function Calculator() {
   const [display, setDisplay] = useState('0')
   const calculator = useCalculator()
 
-  function handleClick(value: string) {
-    if (/^\d$/.test(value)) {
-      setDisplay(calculator.inputDigit(display, value))
-    } else if (value === '.') {
-      setDisplay(calculator.inputDecimal(display))
-    } else if (value === '+/-') {
-      setDisplay(calculator.toggleSign(display))
-    } else if (value === '=') {
-      setDisplay(calculator.pressEqual(display))
-    } else {
-      setDisplay(calculator.pressOperation(display, value as never))
-    }
+  function handlePress(value: string) {
+    setDisplay(calculator.press(display, value))
   }
 
   return (
     <section className="calculator">
-      <div className="display">{display}</div>
-      <div className="keypad">
-        {buttons.map((button) => (
-          <button key={button} onClick={() => handleClick(button)}>
-            {button}
-          </button>
-        ))}
-      </div>
+      <Display value={display} />
+      <Keypad buttons={buttons} onPress={handlePress} />
     </section>
   )
 }
