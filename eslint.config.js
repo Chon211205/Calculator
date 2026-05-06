@@ -1,10 +1,12 @@
 import js from '@eslint/js'
 import tseslint from 'typescript-eslint'
 import reactHooks from 'eslint-plugin-react-hooks'
+import storybook from 'eslint-plugin-storybook'
 
 export default tseslint.config(
   js.configs.recommended,
   ...tseslint.configs.recommended,
+  ...storybook.configs['flat/recommended'],
   {
     files: ['src/**/*.{js,jsx,ts,tsx}'],
     plugins: {
@@ -21,8 +23,8 @@ export default tseslint.config(
           ignoreTemplateLiterals: true
         }
       ],
-      '@typescript-eslint/no-explicit-any': 'error',
-      '@typescript-eslint/no-unused-vars': 'error'
+      '@typescript-eslint/no-unused-vars': 'error',
+      '@typescript-eslint/no-explicit-any': 'error'
     }
   }
 )

@@ -1,5 +1,4 @@
 import { useRef } from 'react'
-import { useRef } from 'react'
 import {
   calculate,
   formatResult,
