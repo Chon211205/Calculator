@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import {
   MAX_LENGTH,
   calculate,
@@ -7,123 +7,105 @@ import {
 } from '../logic/calculatorLogic'
 
 export function useCalculator() {
+  const [display, setDisplay] = useState('0')
+  const input = useRef('0')
+  const expression = useRef('')
   const storedValue = useRef<number | null>(null)
   const operation = useRef<Operation>(null)
-  const shouldClearDisplay = useRef(false)
+  const shouldClearInput = useRef(false)
 
-  function inputDigit(current: string, digit: string) {
-    if (current === 'ERROR' || shouldClearDisplay.current) {
-      shouldClearDisplay.current = false
-      return digit
-    }
-
-    if (current === '0') {
-      return digit
-    }
-
-    if (current.length >= MAX_LENGTH) {
-      return current
-    }
-
-    return current + digit
-  }
-
-  function inputDecimal(current: string) {
-    if (current === 'ERROR' || shouldClearDisplay.current) {
-      shouldClearDisplay.current = false
-      return '0.'
-    }
-
-    if (current.includes('.') || current.length >= MAX_LENGTH) {
-      return current
-    }
-
-    return `${current}.`
-  }
-
-  function toggleSign(current: string) {
-    if (current === 'ERROR' || current === '0') {
-      return current
-    }
-
-    if (current.startsWith('-')) {
-      return current.slice(1)
-    }
-
-    if (current.length >= MAX_LENGTH) {
-      return current
-    }
-
-    return `-${current}`
-  }
-
-  function pressOperation(current: string, nextOperation: Operation) {
-    if (current === 'ERROR') {
-      return current
-    }
-
-    const currentValue = Number(current)
-
-    if (storedValue.current === null) {
-      storedValue.current = currentValue
-    } else if (operation.current !== null) {
-      const result = calculate(storedValue.current, currentValue, operation.current)
-      const formatted = formatResult(result)
-
-      storedValue.current = formatted === 'ERROR' ? null : Number(formatted)
-      shouldClearDisplay.current = true
-      operation.current = formatted === 'ERROR' ? null : nextOperation
-
-      return formatted
-    }
-
-    operation.current = nextOperation
-    shouldClearDisplay.current = true
-
-    return current
-  }
-
-  function pressEqual(current: string) {
-    if (current === 'ERROR' || storedValue.current === null || operation.current === null) {
-      return current
-    }
-
-    const result = calculate(storedValue.current, Number(current), operation.current)
-    const formatted = formatResult(result)
-
+  function resetIfError() {
+    if (display !== 'ERROR') return false
+    input.current = '0'
+    expression.current = ''
     storedValue.current = null
     operation.current = null
-    shouldClearDisplay.current = true
-
-    return formatted
+    shouldClearInput.current = false
+    return true
   }
 
-  function press(value: string, button: string) {
-    if (/^\d$/.test(button)) {
-      return inputDigit(value, button)
-    }
-
-    if (button === '.') {
-      return inputDecimal(value)
-    }
-
-    if (button === '+/-') {
-      return toggleSign(value)
-    }
-
-    if (button === '=') {
-      return pressEqual(value)
-    }
-
-    return pressOperation(value, button as Operation)
+  function updateDisplay() {
+    setDisplay(`${expression.current} ${input.current}`.trim())
   }
 
-  return {
-    inputDigit,
-    inputDecimal,
-    toggleSign,
-    pressOperation,
-    pressEqual,
-    press
+  function pressDigit(button: string) {
+    resetIfError()
+
+    if (shouldClearInput.current) {
+      input.current = button
+      shouldClearInput.current = false
+    } else if (input.current === '0') {
+      input.current = button
+    } else if (input.current.length < MAX_LENGTH) {
+      input.current += button
+    }
+
+    updateDisplay()
   }
+
+  function pressDecimal() {
+    resetIfError()
+
+    if (shouldClearInput.current) {
+      input.current = '0.'
+      shouldClearInput.current = false
+    } else if (!input.current.includes('.') && input.current.length < MAX_LENGTH) {
+      input.current += '.'
+    }
+
+    updateDisplay()
+  }
+
+  function pressToggleSign() {
+    if (resetIfError() || input.current === '0') return
+
+    if (input.current.startsWith('-')) {
+      input.current = input.current.slice(1)
+    } else if (input.current.length < MAX_LENGTH) {
+      input.current = `-${input.current}`
+    }
+
+    updateDisplay()
+  }
+
+  function pressOperation(nextOperation: Operation) {
+    if (resetIfError()) return
+
+    if (storedValue.current !== null && operation.current !== null && !shouldClearInput.current) {
+      const result = calculate(storedValue.current, Number(input.current), operation.current)
+      input.current = formatResult(result)
+      storedValue.current = input.current === 'ERROR' ? null : Number(input.current)
+    } else {
+      storedValue.current = Number(input.current)
+    }
+
+    operation.current = input.current === 'ERROR' ? null : nextOperation
+    expression.current = input.current === 'ERROR' ? '' : `${input.current} ${nextOperation}`
+    shouldClearInput.current = true
+    setDisplay(input.current === 'ERROR' ? 'ERROR' : expression.current)
+  }
+
+  function pressEqual() {
+    if (storedValue.current === null || operation.current === null || display === 'ERROR') return
+
+    const result = calculate(storedValue.current, Number(input.current), operation.current)
+    const formatted = formatResult(result)
+
+    input.current = formatted
+    expression.current = ''
+    storedValue.current = null
+    operation.current = null
+    shouldClearInput.current = true
+    setDisplay(formatted)
+  }
+
+  function press(button: string) {
+    if (/^\d$/.test(button)) pressDigit(button)
+    else if (button === '.') pressDecimal()
+    else if (button === '+/-') pressToggleSign()
+    else if (button === '=') pressEqual()
+    else pressOperation(button as Operation)
+  }
+
+  return { display, press }
 }
