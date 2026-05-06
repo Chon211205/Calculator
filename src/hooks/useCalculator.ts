@@ -1,37 +1,10 @@
 import { useRef } from 'react'
-
-type Operation = '+' | '-' | '*' | '/' | '%' | null
-
-const MAX_LENGTH = 9
-const MAX_VALUE = 999999999
-
-function isInvalidResult(value: number) {
-  return value < 0 || value > MAX_VALUE || !Number.isFinite(value)
-}
-
-function formatResult(value: number) {
-  if (isInvalidResult(value)) {
-    return 'ERROR'
-  }
-
-  const text = Number.isInteger(value) ? String(value) : String(value).slice(0, MAX_LENGTH)
-
-  if (text.length <= MAX_LENGTH) {
-    return text
-  }
-
-  return 'ERROR'
-}
-
-function calculate(first: number, second: number, operation: Operation) {
-  if (operation === '+') return first + second
-  if (operation === '-') return first - second
-  if (operation === '*') return first * second
-  if (operation === '/') return first / second
-  if (operation === '%') return first % second
-
-  return second
-}
+import { useRef } from 'react'
+import {
+  calculate,
+  formatResult,
+  type Operation
+} from '../logic/calculatorLogic'
 
 export function useCalculator() {
   const storedValue = useRef<number | null>(null)
@@ -125,25 +98,25 @@ export function useCalculator() {
     return formatted
   }
 
-    function press(value: string, button: string) {
+  function press(value: string, button: string) {
     if (/^\d$/.test(button)) {
-        return inputDigit(value, button)
+      return inputDigit(value, button)
     }
 
     if (button === '.') {
-        return inputDecimal(value)
+      return inputDecimal(value)
     }
 
     if (button === '+/-') {
-        return toggleSign(value)
+      return toggleSign(value)
     }
 
     if (button === '=') {
-        return pressEqual(value)
+      return pressEqual(value)
     }
 
     return pressOperation(value, button as Operation)
-    }
+  }
 
   return {
     inputDigit,
