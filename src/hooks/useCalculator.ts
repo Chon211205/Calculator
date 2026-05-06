@@ -1,5 +1,6 @@
 import { useRef } from 'react'
 import {
+  MAX_LENGTH,
   calculate,
   formatResult,
   type Operation

@@ -1,7 +1,7 @@
 export type Operation = '+' | '-' | '*' | '/' | '%' | null
 
-const MAX_LENGTH = 9
-const MAX_VALUE = 999999999
+export const MAX_LENGTH = 9
+export const MAX_VALUE = 999999999
 
 export function isInvalidResult(value: number) {
   return value < 0 || value > MAX_VALUE || !Number.isFinite(value)
