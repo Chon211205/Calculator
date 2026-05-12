@@ -32,7 +32,7 @@ button {
 }
 
 .calculator::before {
-  content: 'SCIENTIFIC CALCULATOR';
+  content: 'Calculadora cientifica';
   display: block;
   margin-bottom: 6px;
   color: #e6edf5;
