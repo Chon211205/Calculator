@@ -10,7 +10,7 @@ type CalculatorStateProps = {
 
 function CalculatorState({ value }: CalculatorStateProps) {
   return (
-    <section className="calculator">
+    <section aria-label="Calculadora" className="calculator">
       <Display value={value} />
       <Keypad buttons={buttons} onPress={() => {}} />
     </section>

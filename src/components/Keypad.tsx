@@ -7,7 +7,7 @@ type KeypadProps = {
 
 export function Keypad({ buttons, onPress }: KeypadProps) {
   return (
-    <div className="keypad">
+    <div aria-label="Teclado de calculadora" className="keypad">
       {buttons.map((button) => (
         <Button key={button} value={button} onPress={onPress} />
       ))}

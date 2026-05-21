@@ -12,7 +12,7 @@ function getClassName(value: string) {
 
 export function Button({ value, onPress }: ButtonProps) {
   return (
-    <button className={getClassName(value)} type="button" onClick={() => onPress(value)}>
+    <button aria-label={`Presionar ${value}`} className={getClassName(value)} type="button" onClick={() => onPress(value)}>
       {value}
     </button>
   )

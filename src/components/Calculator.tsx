@@ -11,7 +11,7 @@ export function Calculator() {
   const handlePress = (value: string) => setDisplay(calculator.press(display, value))
 
   return (
-    <section className="calculator">
+    <section aria-label="Calculadora" className="calculator">
       <Display value={display} />
       <Keypad buttons={buttons} onPress={handlePress} />
     </section>
