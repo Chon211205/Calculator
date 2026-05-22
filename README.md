@@ -3,6 +3,8 @@
 Calculadora hecha con React, TypeScript, Vite y Bun. Permite realizar suma, resta,
 multiplicacion, division, modulo, punto decimal y cambio de signo.
 
+## Enlace al link: http://35.239.29.236/241203/calculadora/
+
 ## Requisitos
 
 - Bun instalado
@@ -58,7 +60,5 @@ bun run build
 ```
 
 El resultado se genera en la carpeta `dist`.
-
-## Enlace al link: http://35.239.29.236/241203/calculadora/
 
 
