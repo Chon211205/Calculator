@@ -1,4 +1,4 @@
-# Calculadora React
+# Calculadora React, proyecto 2
 
 Calculadora hecha con React, TypeScript, Vite y Bun. Permite realizar suma, resta,
 multiplicacion, division, modulo, punto decimal y cambio de signo.
