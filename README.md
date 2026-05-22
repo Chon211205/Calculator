@@ -59,10 +59,6 @@ bun run build
 
 El resultado se genera en la carpeta `dist`.
 
-## Scripts principales
+## Enlace al link: http://35.239.29.236/241203/calculadora/
 
-- `bun run dev`: inicia la aplicacion en modo desarrollo.
-- `bun test`: corre los tests.
-- `bun run lint`: revisa el codigo con ESLint.
-- `bun run storybook`: inicia Storybook.
-- `bun run build`: crea la version de produccion.
+
