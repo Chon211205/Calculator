@@ -31,10 +31,6 @@ bun test
 
 Tambien funciona con:
 
-```bash
-npm test
-```
-
 ## Correr lint
 
 ```bash
